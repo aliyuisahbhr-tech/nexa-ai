@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NEXA AI Assistant</title>
+<style>
+body {
+  background: #0b1020;
+  color: white;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding: 20px;
+  margin: 0;
+}
+.container {
+  max-width: 500px;
+  margin: auto;
+}
+h1 { color: #64d8ff; font-size: 32px; }
+.orb {
+  width: 100px;
+  height: 100px;
+  margin: 25px auto;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff, #45c8ff, #3942aa);
+  box-shadow: 0 0 35px #45c8ff;
+}
+.card {
+  background: #18233d;
+  padding: 18px;
+  border-radius: 18px;
+  margin: 18px 0;
+}
+input, select, button {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px;
+  margin: 7px 0;
+  border-radius: 10px;
+  border: none;
+  font-size: 16px;
+}
+input, select {
+  background: #0b1020;
+  color: white;
+}
+button {
+  background: #168bd2;
+  color: white;
+  font-weight: bold;
+}
+button:active { opacity: 0.7; }
+#reply {
+  background: #0b1020;
+  padding: 15px;
+  border-radius: 10px;
+  min-height: 40px;
+  line-height: 1.5;
+}
+.note {
+  color: #b8c6dc;
+  font-size: 13px;
+  line-height: 1.5;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<h1>🤖 NEXA AI</h1>
+<p>Your Personal Voice Assistant</p>
+
+<div class="orb"></div>
+
+<div class="card">
+  <label for="language">Choose your language</label>
+  <select id="language">
+    <option value="en-US">English</option>
+    <option value="ha-NG">Hausa</option>
+  </select>
+
+  <button onclick="listen()">🎙️ TALK TO NEXA</button>
+
+  <p id="status" class="note">
+    Tap the microphone and speak.
+  </p>
+
+  <input id="message"
+         placeholder="Type your question here">
+
+  <button onclick="processCommand()">
+    Send Message
+  </button>
+</div>
+
+<div class="card">
+  <h3>NEXA's Response</h3>
+  <div id="reply">Sannu! Hello! I am NEXA AI.</div>
+  <button onclick="speakReply()">🔊 Repeat Response</button>
+</div>
+
+<div class="card">
+  <h3>Try These Commands</h3>
+  <p class="note">
+    Hello<br>
+    Sannu<br>
+    What time is it?<br>
+    What is your name?<br>
+    Open YouTube<br>
+    Help me make a phone call
+  </p>
+</div>
+
+<p class="note">
+  NEXA AI Prototype — Version 1
+</p>
+
+</div>
+
+<script>
+let lastReply = "Sannu! Hello! I am NEXA AI.";
+
+function say(text) {
+  lastReply = text;
+  document.getElementById("reply").textContent = text;
+
+  if ("speechSynthesis" in window) {
+    speechSynthesis.cancel();
+
+    let voice = new SpeechSynthesisUtterance(text);
+    voice.lang = document.getElementById("language").value;
+    voice.rate = 0.9;
+
+    speechSynthesis.speak(voice);
+  }
+}
+
+function speakReply() {
+  say(lastReply);
+}
+
+function processCommand() {
+  let input = document.getElementById("message");
+  let q = input.value.trim().toLowerCase();
+  let lang = document.getElementById("language").value;
+  let hausa = lang === "ha-NG";
+
+  if (!q) {
+    say(hausa ? "Rubuta tambayarka." :
+                  "Please type a message.");
+    return;
+  }
+
+  if (q.includes("hello") ||
+      q.includes("hi") ||
+      q.includes("sannu") ||
+      q.includes("ina kwana")) {
+
+    say(hausa
+      ? "Sannu! Yaya zan taimaka maka yau?"
+      : "Hello! How can I help you today?");
+
+  } else if (q.includes("time") ||
+             q.includes("lokaci") ||
+             q.includes("karfe")) {
+
+    let time = new Date().toLocaleTimeString([], {
+      hour: "numeric",
+      minute: "2-digit"
+    });
+
+    say(hausa
+      ? "Yanzu karfe " + time
+      : "The current time is " + time);
+
+  } else if (q.includes("your name") ||
+             q.includes("sunanka") ||
+             q.includes("who are you")) {
+
+    say(hausa
+      ? "Sunana NEXA AI, mataimakinka."
+      : "My name is NEXA AI, your assistant.");
+
+  } else if (q.includes("open youtube") ||
+             q.includes("bude youtube")) {
+
+    say(hausa
+      ? "Zan bude YouTube yanzu."
+      : "Opening YouTube now.");
+
+    setTimeout(function() {
+      window.open("https://www.youtube.com/", "_blank");
+    }, 800);
+
+  } else if (q.includes("call") ||
+             q.includes("kira")) {
+
+    say(hausa
+      ? "Zan taimaka maka bude wayar kira. Ka shigar da lambar da kake son kira."
+      : "I can help open your phone dialer. Enter the phone number you want to call.");
+
+    let number = prompt(
+      hausa ? "Shigar da lambar waya:" :
+              "Enter the phone number:"
+    );
+
+    if (number && /^[+0-9\s()-]{5,20}$/.test(number)) {
+      if (confirm("Open the dialer for " + number + "?")) {
+        window.location.href = "tel:" + number.replace(/[\s()-]/g, "");
+      }
+    } else if (number) {
+      say(hausa ? "Lambar ba ta dace ba." :
+                    "That number doesn't look valid.");
+    }
+
+  } else if (q.includes("help") ||
+             q.includes("taimako")) {
+
+    say(hausa
+      ? "Zan iya gaishe ka, gaya maka lokaci, bude YouTube, da taimaka maka bude wayar kira."
+      : "I can greet you, tell the time, open YouTube, and help you open your phone dialer.");
+
+  } else {
+
+    say(hausa
+      ? "Yi hakuri, wannan sigar ba ta da cikakken AI tukuna."
+      : "Sorry, this first version does not have a full AI model connected yet.");
+  }
+
+  input.value = "";
+}
+
+function listen() {
+  const Recognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+  if (!Recognition) {
+    document.getElementById("status").textContent =
+      "Voice recognition is unavailable here. Please type instead.";
+    return;
+  }
+
+  let recognition = new Recognition();
+  recognition.lang =
+    document.getElementById("language").value;
+  recognition.interimResults = false;
+
+  document.getElementById("status").textContent =
+    "Listening... Speak now.";
+
+  recognition.onresult = function(event) {
+    document.getElementById("message").value =
+      event.results[0][0].transcript;
+
+    document.getElementById("status").textContent =
+      "Voice received.";
+
+    processCommand();
+  };
+
+  recognition.onerror = function() {
+    document.getElementById("status").textContent =
+      "Microphone issue. Check permissions or type instead.";
+  };
+
+  try {
+    recognition.start();
+  } catch (error) {
+    document.getElementById("status").textContent =
+      "Please try the microphone again.";
+  }
+}
+</script>
+
+</body>
+</html>

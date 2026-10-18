@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="manifest" href="/nexa-ai/manifest.json">
+<meta name="theme-color" content="#0b1020">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>NEXA AI Assistant</title>
@@ -330,7 +332,14 @@ function listen() {
       "Please try the microphone again.";
   }
 }
-</script>
 
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/nexa-ai/service-worker.js")
+      .catch(error => console.error("Service worker registration failed:", error));
+  });
+}
+</script>
 </body>
 </html>

@@ -142,94 +142,151 @@ function speakReply() {
 }
 
 function processCommand() {
-  let input = document.getElementById("message");
-  let q = input.value.trim().toLowerCase();
-  let lang = document.getElementById("language").value;
-  let hausa = lang === "ha-NG";
+  async function processCommand() {
+const input = document.getElementById("message");
+const q = input.value.trim();
+const lang = document.getElementById("language").value;
+const hausa = lang === "ha-NG";
 
-  if (!q) {
-    say(hausa ? "Rubuta tambayarka." :
-                  "Please type a message.");
-    return;
+if (!q) {
+say(hausa ? "Rubuta tambayarka." : "Please type a message.");
+return;
+}
+
+const command = q.toLowerCase();
+
+if (
+command.includes("hello") ||
+command.includes("hi") ||
+command.includes("sannu") ||
+command.includes("ina kwana")
+) {
+say(hausa
+? "Sannu! Yaya zan taimaka maka yau?"
+: "Hello! How can I help you today?");
+
+} else if (
+command.includes("time") ||
+command.includes("lokaci") ||
+command.includes("karfe")
+) {
+const time = new Date().toLocaleTimeString([], {
+hour: "numeric",
+minute: "2-digit"
+});
+
+say(hausa
+  ? "Yanzu karfe " + time
+  : "The current time is " + time);
+
+} else if (
+command.includes("your name") ||
+command.includes("sunanka") ||
+command.includes("who are you")
+) {
+say(hausa
+? "Sunana NEXA AI, mataimakinka."
+: "My name is NEXA AI, your assistant.");
+
+} else if (
+command.includes("open youtube") ||
+command.includes("bude youtube")
+) {
+say(hausa
+? "Zan bude YouTube yanzu."
+: "Opening YouTube now.");
+
+setTimeout(function() {
+  window.open("https://www.youtube.com/", "_blank");
+}, 800);
+
+} else if (
+command.includes("call") ||
+command.includes("kira")
+) {
+say(hausa
+? "Shigar da lambar wayar da kake son kira."
+: "Enter the phone number you want to call.");
+
+const number = prompt(
+  hausa ? "Shigar da lambar waya:" : "Enter the phone number:"
+);
+
+if (number && /^[+0-9\s()-]{5,20}$/.test(number)) {
+  if (confirm("Open the dialer for " + number + "?")) {
+    window.location.href =
+      "tel:" + number.replace(/[\s()-]/g, "");
   }
+} else if (number) {
+  say(hausa ? "Lambar ba ta dace ba." : "That number doesn't look valid.");
+}
 
-  if (q.includes("hello") ||
-      q.includes("hi") ||
-      q.includes("sannu") ||
-      q.includes("ina kwana")) {
+} else if (
+command.includes("help") ||
+command.includes("taimako")
+) {
+say(hausa
+? "Zan iya amsa tambayoyi, gaishe ka, gaya maka lokaci, bude YouTube, da taimaka maka bude wayar kira."
+: "I can answer questions, greet you, tell the time, open YouTube, and help open your phone dialer.");
 
-    say(hausa
-      ? "Sannu! Yaya zan taimaka maka yau?"
-      : "Hello! How can I help you today?");
+} else {
+await askNexaAI(q, lang);
+}
 
-  } else if (q.includes("time") ||
-             q.includes("lokaci") ||
-             q.includes("karfe")) {
+input.value = "";
+}
 
-    let time = new Date().toLocaleTimeString([], {
-      hour: "numeric",
-      minute: "2-digit"
-    });
+async function askNexaAI(message, language) {
+const status = document.getElementById("status");
+const hausa = language === "ha-NG";
 
-    say(hausa
-      ? "Yanzu karfe " + time
-      : "The current time is " + time);
+status.textContent = hausa
+? "NEXA AI na tunani..."
+: "NEXA AI is thinking...";
 
-  } else if (q.includes("your name") ||
-             q.includes("sunanka") ||
-             q.includes("who are you")) {
+try {
+const response = await fetch(
+"https://nexa-ai-brain-d61a.danbaiwa5050.workers.dev/",
+{
+method: "POST",
+headers: {
+"Content-Type": "application/json"
+},
+body: JSON.stringify({
+message: message,
+language: language
+})
+}
+);
 
-    say(hausa
-      ? "Sunana NEXA AI, mataimakinka."
-      : "My name is NEXA AI, your assistant.");
+const data = await response.json();
 
-  } else if (q.includes("open youtube") ||
-             q.includes("bude youtube")) {
+if (!response.ok) {
+  throw new Error(data.error || "AI request failed");
+}
 
-    say(hausa
-      ? "Zan bude YouTube yanzu."
-      : "Opening YouTube now.");
+if (!data.reply) {
+  throw new Error("No reply received");
+}
 
-    setTimeout(function() {
-      window.open("https://www.youtube.com/", "_blank");
-    }, 800);
+say(data.reply);
 
-  } else if (q.includes("call") ||
-             q.includes("kira")) {
+status.textContent = hausa
+  ? "An gama."
+  : "Ready.";
 
-    say(hausa
-      ? "Zan taimaka maka bude wayar kira. Ka shigar da lambar da kake son kira."
-      : "I can help open your phone dialer. Enter the phone number you want to call.");
+} catch (error) {
+console.error("NEXA AI error:", error);
 
-    let number = prompt(
-      hausa ? "Shigar da lambar waya:" :
-              "Enter the phone number:"
-    );
+say(hausa
+  ? "Yi hakuri, na kasa haɗuwa da kwakwalwar AI. Ka duba intanet ka sake gwadawa."
+  : "Sorry, I couldn't connect to my AI brain. Please check your internet and try again.");
 
-    if (number && /^[+0-9\s()-]{5,20}$/.test(number)) {
-      if (confirm("Open the dialer for " + number + "?")) {
-        window.location.href = "tel:" + number.replace(/[\s()-]/g, "");
-      }
-    } else if (number) {
-      say(hausa ? "Lambar ba ta dace ba." :
-                    "That number doesn't look valid.");
-    }
+status.textContent = hausa
+  ? "Matsalar haɗi."
+  : "Connection problem.";
 
-  } else if (q.includes("help") ||
-             q.includes("taimako")) {
-
-    say(hausa
-      ? "Zan iya gaishe ka, gaya maka lokaci, bude YouTube, da taimaka maka bude wayar kira."
-      : "I can greet you, tell the time, open YouTube, and help you open your phone dialer.");
-
-  } else {
-
-    say(hausa
-      ? "Yi hakuri, wannan sigar ba ta da cikakken AI tukuna."
-      : "Sorry, this first version does not have a full AI model connected yet.");
-  }
-
-  input.value = "";
+}
 }
 
 function listen() {

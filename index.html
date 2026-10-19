@@ -123,7 +123,7 @@ button:active { opacity: 0.7; }
 
 <script>
 let lastReply = "Sannu! Hello! I am NEXA AI.";
-
+let conversationHistory = [];
 function say(text) {
   lastReply = text;
   document.getElementById("reply").textContent = text;
@@ -255,8 +255,9 @@ headers: {
 "Content-Type": "application/json"
 },
 body: JSON.stringify({
-message: message,
-language: language
+  message: message,
+  language: language,
+  history: conversationHistory.slice(-12)
 })
 }
 );
@@ -270,6 +271,14 @@ if (!response.ok) {
 if (!data.reply) {
   throw new Error("No reply received");
 }
+
+conversationHistory.push(
+  { role: "user", text: message },
+  { role: "model", text: data.reply }
+);
+
+// Keep only the latest 12 messages.
+conversationHistory = conversationHistory.slice(-12);
 
 say(data.reply);
 

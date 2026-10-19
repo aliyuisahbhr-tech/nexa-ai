@@ -298,9 +298,10 @@ headers: {
 "Content-Type": "application/json"
 },
 body: JSON.stringify({
-  message: message,
-  language: language,
-  history: conversationHistory.slice(-12)
+message: message,
+language: language,
+history: conversationHistory.slice(-12),
+personalMemory: personalMemory
 })
 }
 );

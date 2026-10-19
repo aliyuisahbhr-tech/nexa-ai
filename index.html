@@ -281,6 +281,7 @@ input.value = "";
 }
 
 async function askNexaAI(message, language) {
+  rememberPersonalFacts(message);
 const status = document.getElementById("status");
 const hausa = language === "ha-NG";
 

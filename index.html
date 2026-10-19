@@ -133,6 +133,31 @@ let personalMemory = {};
 } catch (error) {
   personalMemory = {};
   }
+  function rememberPersonalFacts(message) {
+const text = message.trim();
+
+const patterns = [
+{ key: "name", regex: /\bmy name is\s+([^.!?,\n]+)/i },
+{ key: "work", regex: /\bi work (?:in|at|as)\s+([^.!?,\n]+)/i },
+{ key: "favoriteLanguage", regex: /\bmy favou?rite language is\s+([^.!?,\n]+)/i },
+{ key: "name", regex: /\bsunana\s+([^.!?,\n]+)/i },
+{ key: "favoriteLanguage", regex: /\bharshen da na fi so shi ne\s+([^.!?,\n]+)/i }
+];
+
+for (const item of patterns) {
+const match = text.match(item.regex);
+
+if (match) {
+  personalMemory[item.key] = match[1].trim();
+
+  localStorage.setItem(
+    "nexaPersonalMemory",
+    JSON.stringify(personalMemory)
+  );
+}
+
+}
+  }
 try {
   const savedHistory = localStorage.getItem("nexaConversationHistory");
   if (savedHistory) {

@@ -273,6 +273,18 @@ window.open("https://www.google.com/", "_blank");
 }, 800);
 
 } else if (
+command.includes("open google maps") ||
+command.includes("bude google maps")
+) {
+say(hausa
+? "Zan bude Google Maps yanzu."
+: "Opening Google Maps now.");
+
+setTimeout(function() {
+window.open("https://maps.google.com/", "_blank");
+}, 800);
+
+} else if (
 command.includes("open youtube") ||
 command.includes("bude youtube")
 ) {

@@ -126,6 +126,7 @@ button:active { opacity: 0.7; }
 let lastReply = "Sannu! Hello! I am NEXA AI.";
 let conversationHistory = [];
 let personalMemory = {};
+  let handsFreeOn = false;
   try {
   const savedMemory = localStorage.getItem("nexaPersonalMemory");
   if (savedMemory) {

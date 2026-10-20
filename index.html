@@ -260,7 +260,7 @@ say(hausa
 ? "Sunana NEXA AI, mataimakinka."
 : "My name is NEXA AI, your assistant.");
 } else if (
-command.includes("open google") ||
+(command.includes("open google") && !command.includes("maps")) ||
 command.includes("bude google") ||
 command.includes("open google search")
 ) {

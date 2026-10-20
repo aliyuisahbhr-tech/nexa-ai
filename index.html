@@ -169,18 +169,27 @@ try {
   conversationHistory = [];
 }
 function say(text) {
-  lastReply = text;
-  document.getElementById("reply").textContent = text;
+lastReply = text;
+document.getElementById("reply").textContent = text;
 
-  if ("speechSynthesis" in window) {
-    speechSynthesis.cancel();
+if ("speechSynthesis" in window) {
+speechSynthesis.cancel();
 
-    let voice = new SpeechSynthesisUtterance(text);
-    voice.lang = document.getElementById("language").value;
-    voice.rate = 0.9;
+const voice = new SpeechSynthesisUtterance(text);
+voice.lang = document.getElementById("language").value;
+voice.rate = 0.9;
 
-    speechSynthesis.speak(voice);
+voice.onend = function() {
+  if (handsFreeOn) {
+    setTimeout(function() {
+      startHandsFreeListening();
+    }, 500);
   }
+};
+
+speechSynthesis.speak(voice);
+
+}
 }
 
 function speakReply() {

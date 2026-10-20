@@ -446,6 +446,20 @@ document.getElementById("status").textContent =
 "Please try hands-free mode again.";
 }
   }
+  function toggleHandsFree() {
+const button = document.getElementById("handsFreeButton");
+
+handsFreeOn = !handsFreeOn;
+
+if (handsFreeOn) {
+button.textContent = "🔊 HANDS-FREE: ON";
+startHandsFreeListening();
+} else {
+button.textContent = "🔊 HANDS-FREE: OFF";
+document.getElementById("status").textContent =
+"Hands-free mode is off.";
+}
+  }
   
 </script>
 <script>

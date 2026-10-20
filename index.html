@@ -259,6 +259,18 @@ command.includes("who are you")
 say(hausa
 ? "Sunana NEXA AI, mataimakinka."
 : "My name is NEXA AI, your assistant.");
+} else if (
+command.includes("open google") ||
+command.includes("bude google") ||
+command.includes("open google search")
+) {
+say(hausa
+? "Zan bude Google yanzu."
+: "Opening Google now.");
+
+setTimeout(function() {
+window.open("https://www.google.com/", "_blank");
+}, 800);
 
 } else if (
 command.includes("open youtube") ||

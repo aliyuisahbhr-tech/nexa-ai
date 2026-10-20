@@ -137,7 +137,9 @@ let personalMemory = {};
   }
   function rememberPersonalFacts(message) {
 const text = message.trim();
-    const rememberMatch = text.match(/^remember that my ([a-zA-Z ]+) is ([^.!?,\n]+)/i);
+    const rememberMatch =
+text.match(/^remember that my ([a-zA-Z ]+) is ([^.!?,\n]+)/i) ||
+text.match(/^ka tuna cewa (?:na|my) ([a-zA-Z ]+) ([^.!?,\n]+)/i);
 
 if (rememberMatch) {
 const key = rememberMatch[1].trim().replace(/\s+/g, "_").toLowerCase();

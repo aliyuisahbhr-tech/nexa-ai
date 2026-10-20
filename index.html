@@ -57,9 +57,22 @@ input, select {
   color: white;
 }
 button {
-  background: #168bd2;
-  color: white;
-  font-weight: bold;
+background: linear-gradient(135deg, #168bd2, #2563eb);
+color: white;
+font-weight: bold;
+font-size: 15px;
+padding: 14px 18px;
+margin: 6px 4px;
+border: none;
+border-radius: 12px;
+cursor: pointer;
+box-shadow: 0 4px 12px rgba(22, 139, 210, 0.25);
+transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+button:active {
+transform: scale(0.97);
+box-shadow: 0 2px 6px rgba(22, 139, 210, 0.2);
 }
 button:active { opacity: 0.7; }
 #reply {

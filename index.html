@@ -399,6 +399,53 @@ function listen() {
       "Please try the microphone again.";
   }
 }
+  function startHandsFreeListening() {
+if (!handsFreeOn) return;
+
+const Recognition =
+window.SpeechRecognition ||
+window.webkitSpeechRecognition;
+
+if (!Recognition) {
+document.getElementById("status").textContent =
+"Voice recognition is unavailable here. Please type instead.";
+handsFreeOn = false;
+return;
+}
+
+const recognition = new Recognition();
+recognition.lang = document.getElementById("language").value;
+recognition.interimResults = false;
+recognition.continuous = false;
+
+recognition.onresult = function(event) {
+document.getElementById("message").value =
+event.results[0][0].transcript;
+
+processCommand();
+
+};
+
+recognition.onerror = function() {
+if (handsFreeOn) {
+document.getElementById("status").textContent =
+"Listening stopped. Tap HANDS-FREE to try again.";
+}
+};
+
+recognition.onend = function() {
+// NEXA will listen again after speaking its response.
+};
+
+try {
+recognition.start();
+document.getElementById("status").textContent =
+"Hands-free is listening. Speak now.";
+} catch (error) {
+document.getElementById("status").textContent =
+"Please try hands-free mode again.";
+}
+  }
   
 </script>
 <script>

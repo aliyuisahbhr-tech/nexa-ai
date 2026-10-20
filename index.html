@@ -137,6 +137,19 @@ let personalMemory = {};
   }
   function rememberPersonalFacts(message) {
 const text = message.trim();
+    const rememberMatch = text.match(/^remember that my ([a-zA-Z ]+) is ([^.!?,\n]+)/i);
+
+if (rememberMatch) {
+const key = rememberMatch[1].trim().replace(/\s+/g, "_").toLowerCase();
+const value = rememberMatch[2].trim();
+
+personalMemory[key] = value;
+
+localStorage.setItem(
+"nexaPersonalMemory",
+JSON.stringify(personalMemory)
+);
+}
 
 const patterns = [
 { key: "name", regex: /\bmy name is\s+([^.!?,\n]+)/i },

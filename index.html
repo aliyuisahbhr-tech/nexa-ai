@@ -318,6 +318,17 @@ setTimeout(function() {
 window.open("https://maps.google.com/", "_blank");
 }, 800);
 
+  } else if (
+command.includes("open whatsapp") ||
+command.includes("bude whatsapp")
+) {
+say(hausa
+? "Zan bude WhatsApp yanzu."
+: "Opening WhatsApp now.");
+
+setTimeout(function() {
+window.location.href = "https://wa.me/";
+}, 800);
 } else if (
 command.includes("open youtube") ||
 command.includes("bude youtube")

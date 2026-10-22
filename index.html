@@ -338,7 +338,7 @@ window.location.href = "intent://send/#Intent;package=com.whatsapp;scheme=whatsa
     : "Opening Camera now.");
 
   setTimeout(function() {
-    window.location.href = "intent:#Intent;action=android.media.action.IMAGE_CAPTURE;end";
+    window.location.href = "intent://capture/#Intent;scheme=content;end";
   }, 800);
 } else if (
 command.includes("open youtube") ||

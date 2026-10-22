@@ -329,6 +329,17 @@ say(hausa
 setTimeout(function() {
 window.location.href = "intent://send/#Intent;package=com.whatsapp;scheme=whatsapp;end";
 }, 800);
+  } else if (
+  command.includes("open camera") ||
+  command.includes("bude camera")
+) {
+  say(hausa
+    ? "Zan bude kyamara yanzu."
+    : "Opening Camera now.");
+
+  setTimeout(function() {
+    window.location.href = "intent:#Intent;action=android.media.action.IMAGE_CAPTURE;end";
+  }, 800);
 } else if (
 command.includes("open youtube") ||
 command.includes("bude youtube")

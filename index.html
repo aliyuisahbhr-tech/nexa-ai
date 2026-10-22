@@ -327,7 +327,7 @@ say(hausa
 : "Opening WhatsApp now.");
 
 setTimeout(function() {
-window.location.href = "whatsapp://";
+window.location.href = "intent://send/#Intent;package=com.whatsapp;scheme=whatsapp;end";
 }, 800);
 } else if (
 command.includes("open youtube") ||
